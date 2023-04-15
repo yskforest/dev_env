@@ -1,0 +1,24 @@
+opencv-python
+tqdm
+autopep8
+flake8
+
+pygame
+matplotlib
+open3d
+scipy
+pillow
+pandas
+pyyaml
+
+--extra-index-url https://download.pytorch.org/whl/cu116
+torch
+--extra-index-url https://download.pytorch.org/whl/cu116
+torchvision
+
+seaborn
+requests
+protobuf<=3.20.1
+psutil
+thop
+tensorboard
