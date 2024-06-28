@@ -19,6 +19,7 @@ pyyaml
 motpy
 seaborn
 pillow-avif-plugin
+pyautogui
 
 dask[dataframe]
 pillow
