@@ -1,24 +1,39 @@
-opencv-python
 tqdm
 autopep8
 flake8
 
-pygame
+opencv-python
 matplotlib
-open3d
-scipy
-pillow
 pandas
-pyyaml
+jupyterlab
 
---extra-index-url https://download.pytorch.org/whl/cu116
+--extra-index-url https://download.pytorch.org/whl/cu121
 torch
---extra-index-url https://download.pytorch.org/whl/cu116
+--extra-index-url https://download.pytorch.org/whl/cu121
 torchvision
 
+scipy
+pygame
+open3d
+pyyaml
+motpy
 seaborn
-requests
-protobuf<=3.20.1
+pillow-avif-plugin
+
+dask[dataframe]
+pillow
+xmltodict
+rarfile
+ultralytics
+
+# https://github.com/THU-MIG/yolov10/blob/main/requirements.txt
+onnx
+onnxruntime
+pycocotools
+onnxsim
+onnxruntime-gpu
+gradio
 psutil
-thop
-tensorboard
+py-cpuinfo
+huggingface-hub
+safetensors
