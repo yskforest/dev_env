@@ -1,0 +1,14 @@
+tqdm
+autopep8
+flake8
+
+matplotlib
+pandas
+jupyterlab
+numpy
+
+scipy
+pyyaml
+seaborn
+
+xmltodict

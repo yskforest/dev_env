@@ -18,3 +18,17 @@ services:
           devices:
             - driver: nvidia
               capabilities: [ gpu ]
+
+  cpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
+      args:
+        - USER=developer
+    volumes:
+      - .:/home/developer/host_dir
+    environment:
+      - DISPLAY=${DISPLAY}
+    network_mode: "host"
+    tty: true
+    stdin_open: true
