@@ -2,13 +2,14 @@ tqdm
 autopep8
 flake8
 
+opencv-python
 matplotlib
 pandas
 jupyterlab
-numpy
+plotly
+requests
+xmltodict
 
 scipy
 pyyaml
 seaborn
-
-xmltodict

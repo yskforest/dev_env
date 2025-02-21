@@ -9,7 +9,6 @@ jupyterlab
 plotly
 requests
 xmltodict
-# psycopg2
 
 scipy
 pyyaml
