@@ -3,10 +3,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - USER=developer
     volumes:
-      - .:/home/developer/host_dir
+      - .:/workspace
+    working_dir: /workspace
     environment:
       - DISPLAY=${DISPLAY}
     network_mode: "host"
@@ -23,10 +22,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.cpu
-      args:
-        - USER=developer
     volumes:
-      - .:/home/developer/host_dir
+      - .:/workspace
     environment:
       - DISPLAY=${DISPLAY}
     network_mode: "host"

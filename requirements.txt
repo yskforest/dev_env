@@ -6,25 +6,26 @@ opencv-python
 matplotlib
 pandas
 jupyterlab
-
---extra-index-url https://download.pytorch.org/whl/cu118
-torch
---extra-index-url https://download.pytorch.org/whl/cu118
-torchvision
+plotly
+requests
+xmltodict
+# psycopg2
 
 scipy
+pyyaml
+seaborn
+
+--extra-index-url https://download.pytorch.org/whl/cu126
+torch
+--extra-index-url https://download.pytorch.org/whl/cu126
+torchvision
+
 pygame
 open3d
-pyyaml
 motpy
-seaborn
-pillow-avif-plugin
 pyautogui
 
-dask[dataframe]
 pillow
-xmltodict
-rarfile
 ultralytics
 
 # https://github.com/THU-MIG/yolov10/blob/main/requirements.txt
