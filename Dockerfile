@@ -20,7 +20,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
 RUN npm install -g \
     textlint \
     textlint-rule-preset-ja-technical-writing \
-    textlint-plugin-asciidoctor
+    textlint-plugin-asciidoctor \
+    && npm cache clean --force
 
 RUN gem install \
     asciidoctor \
@@ -62,6 +63,9 @@ RUN wget https://github.com/doxygen/doxygen/releases/download/Release_${DOXYGEN_
     && tar xf doxygen-${DOXYGEN_VER}.linux.bin.tar.gz \
     && cp doxygen-${DOXYGEN_VER}/bin/doxygen /usr/local/bin \
     && rm -rf doxygen-*
+
+RUN cd /usr/local \
+    && curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
 
 # ARG UID=1001
 # ARG USER=developer

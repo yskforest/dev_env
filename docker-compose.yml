@@ -1,5 +1,5 @@
 services:
-  app:
+  gpu:
     build:
       context: .
       dockerfile: Dockerfile
@@ -23,7 +23,9 @@ services:
       context: .
       dockerfile: Dockerfile.cpu
     volumes:
-      - .:/workspace
+      - ${HOME}:/workspace
+    working_dir: /workspace
+    restart: always
     environment:
       - DISPLAY=${DISPLAY}
     network_mode: "host"
