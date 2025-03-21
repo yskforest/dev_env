@@ -31,7 +31,8 @@ ultralytics
 onnx
 onnxruntime
 pycocotools
-onnxsim
+# ubuntu24.04 (2023/3) NG
+# onnxsim
 onnxruntime-gpu
 gradio
 psutil

@@ -1,7 +1,7 @@
 #!/bin/bash
  
-python -m venv dev_env
-dev_env\Scripts\activate
+python3 -m venv dev_env
+source dev_env/bin/activate
 
 # 仮想環境に入っているかを確認
 if [ -z "$VIRTUAL_ENV" ]; then
@@ -9,4 +9,4 @@ if [ -z "$VIRTUAL_ENV" ]; then
     exit 1
 fi
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install -r requirements.txt

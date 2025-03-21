@@ -10,15 +10,12 @@ pip install -r requirements.txt
 ```
 - Linux
 ```bash
-python -m venv dev_env
-source dev_env\bin\activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+bash setup.sh
 ```
 - Docker
 ```bash
 docker compose build
-docker compose run --rm app
+docker compose run --rm cpu
 ```
 
 ## memo
