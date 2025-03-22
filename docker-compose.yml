@@ -1,8 +1,22 @@
 services:
-  gpu:
+  cpu:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - ${HOME}:/workspace
+    working_dir: /workspace
+    restart: always
+    environment:
+      - DISPLAY=${DISPLAY}
+    network_mode: "host"
+    tty: true
+    stdin_open: true
+
+  gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
     volumes:
       - .:/workspace
     working_dir: /workspace
@@ -17,17 +31,3 @@ services:
           devices:
             - driver: nvidia
               capabilities: [ gpu ]
-
-  cpu:
-    build:
-      context: .
-      dockerfile: Dockerfile.cpu
-    volumes:
-      - ${HOME}:/workspace
-    working_dir: /workspace
-    restart: always
-    environment:
-      - DISPLAY=${DISPLAY}
-    network_mode: "host"
-    tty: true
-    stdin_open: true
