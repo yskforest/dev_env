@@ -43,7 +43,7 @@ RUN cd /usr/local \
     && wget https://github.com/AlDanial/cloc/releases/download/v${CLOC_VER}/cloc-${CLOC_VER}.tar.gz \
     && tar -zxvf cloc-${CLOC_VER}.tar.gz \
     && cp cloc-${CLOC_VER}/cloc /usr/local/bin \
-    && rm -f cloc-*
+    && rm -rf cloc-*
 
 # install graphviz
 ARG GRAPHVIZ_VER=12.2.1
