@@ -30,12 +30,13 @@ RUN gem install \
     coderay
 
 # install PMD
-ARG PMD_VER=7.11.0
-RUN wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F${PMD_VER}/pmd-dist-${PMD_VER}-bin.zip \
-    && unzip pmd-dist-${PMD_VER}-bin.zip \
-    && cp -r pmd-bin-${PMD_VER} /usr/local \
-    && rm -rf pmd-*
-ENV PATH=/usr/local/pmd-bin-${PMD_VER}/bin:${PATH}
+ARG PMD_VER=7.13.0
+RUN cd /opt && \
+    curl -L -o pmd.zip https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VER}/pmd-dist-${PMD_VER}-bin.zip && \
+    unzip pmd.zip && rm pmd.zip && \
+    mv "pmd-bin-${PMD_VER}" /opt/pmd && \
+    rm -rf /opt/pmd/docs /opt/pmd/etc/testresources
+ENV PATH="/opt/pmd/bin:$PATH"
 
 # install cloc
 ARG CLOC_VER=2.04
@@ -77,7 +78,7 @@ RUN cd /usr/local \
 USER ubuntu
 WORKDIR /home/ubuntu
 
-COPY requirements.txt ./requirements.txt
+COPY requirements_gpu.txt ./requirements.txt
 RUN python3 -m pip install --upgrade pip --break-system-packages \
     && python3 -m pip install -r requirements.txt  --no-cache-dir --break-system-packages
 

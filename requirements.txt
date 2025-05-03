@@ -1,6 +1,4 @@
 tqdm
-autopep8
-flake8
 
 opencv-python
 matplotlib
@@ -13,29 +11,9 @@ xmltodict
 scipy
 pyyaml
 seaborn
-
---extra-index-url https://download.pytorch.org/whl/cu126
-torch
---extra-index-url https://download.pytorch.org/whl/cu126
-torchvision
+chardet
 
 pygame
 open3d
-motpy
 pyautogui
-
 pillow
-ultralytics
-
-# https://github.com/THU-MIG/yolov10/blob/main/requirements.txt
-onnx
-onnxruntime
-pycocotools
-# ubuntu24.04 (2023/3) NG
-# onnxsim
-onnxruntime-gpu
-gradio
-psutil
-py-cpuinfo
-huggingface-hub
-safetensors
