@@ -5,6 +5,7 @@ matplotlib
 pandas
 jupyterlab
 plotly
+streamlit
 requests
 xmltodict
 openpyxl
