@@ -1,12 +1,19 @@
 # dev_env
 
+## 前提条件
+
+- Python 3.8+
+- Docker (Dockerでのセットアップを行う場合)
+
 ## setup
+
 - Windows
+
+PowerShellで以下のコマンドを実行します。
 ```powershell
-python -m venv dev_env
-dev_env\Scripts\activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+# 初回実行時、スクリプトの実行ポリシーの変更が必要な場合があります。
+# Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+./setup.ps1
 ```
 - Linux
 ```bash

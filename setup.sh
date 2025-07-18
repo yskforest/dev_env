@@ -1,12 +1,21 @@
 #!/bin/bash
- 
-python3 -m venv dev_env
-source dev_env/bin/activate
+set -eu
 
-# 仮想環境に入っているかを確認
-if [ -z "$VIRTUAL_ENV" ]; then
-    echo "Error: This script must be run within the virtual environment."
+VENV_DIR="dev_env"
+
+if ! python3 -c "import sys; assert sys.version_info >= (3, 8)" &>/dev/null; then
+    echo "Error: Python 3.8 or higher is required." >&2
     exit 1
 fi
+
+if [ ! -d "$VENV_DIR" ]; then
+  echo "Creating virtual environment in '$VENV_DIR'..."
+  python3 -m venv "$VENV_DIR"
+fi
+
+echo "Activating virtual environment and installing dependencies..."
+source "$VENV_DIR/bin/activate"
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+pip install -r requirements.txt
+
+echo "Setup complete. To activate the environment, run: source $VENV_DIR/bin/activate"
