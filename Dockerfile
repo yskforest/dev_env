@@ -7,8 +7,27 @@ RUN apt-get update && apt-get install -y \
     qtbase5-dev \
     openjdk-21-jdk \
     xalan \
-    ruby \
+    # for rbenv
+    libssl-dev zlib1g-dev libffi-dev libreadline-dev libyaml-dev \
     && rm -rf /var/lib/apt/lists/*
+
+ARG RUBY_VER=3.4.5
+ENV RBENV_ROOT="/opt/rbenv"
+ENV PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"
+RUN git clone https://github.com/rbenv/rbenv.git $RBENV_ROOT \
+    && git clone https://github.com/rbenv/ruby-build.git $RBENV_ROOT/plugins/ruby-build \
+    && $RBENV_ROOT/plugins/ruby-build/install.sh \
+    && $RBENV_ROOT/bin/rbenv install ${RUBY_VER} \
+    && $RBENV_ROOT/bin/rbenv global ${RUBY_VER} \
+    && chmod -R a+rx $RBENV_ROOT \
+    && rm -rf $RBENV_ROOT/plugins/ruby-build
+
+RUN gem install --no-document \
+    asciidoctor \
+    asciidoctor-pdf \
+    asciidoctor-diagram \
+    coderay \
+    && rm -rf ~/.gem
 
 WORKDIR /tmp
 # install Node.js LTS
@@ -22,12 +41,6 @@ RUN npm install -g \
     textlint-rule-preset-ja-technical-writing \
     textlint-plugin-asciidoctor \
     && npm cache clean --force
-
-RUN gem install \
-    asciidoctor \
-    asciidoctor-pdf \
-    asciidoctor-diagram \
-    coderay
 
 # install PMD
 ARG PMD_VER=7.16.0
@@ -73,13 +86,14 @@ RUN cd /usr/local \
 # RUN useradd -m -u ${UID} ${USER}
 # ENV DEBIAN_FRONTEND=noninteractive \
 #     HOME=/home/${USER}
-# WORKDIR ${HOME}  
+# WORKDIR ${HOME}
 
 USER ubuntu
 WORKDIR /home/ubuntu
 
 COPY requirements.txt ./requirements.txt
 RUN python3 -m pip install --upgrade pip --break-system-packages \
-    && python3 -m pip install -r requirements.txt --no-cache-dir --break-system-packages
+    && python3 -m pip install -r requirements.txt --no-cache-dir --break-system-packages \
+    && rm -rf ~/.cache/pip
 
 CMD ["/bin/bash"]
