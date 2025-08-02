@@ -80,6 +80,6 @@ WORKDIR /home/ubuntu
 
 COPY requirements.txt ./requirements.txt
 RUN python3 -m pip install --upgrade pip --break-system-packages \
-    && python3 -m pip install -r requirements.txt  --no-cache-dir --break-system-packages
+    && python3 -m pip install -r requirements.txt --no-cache-dir --break-system-packages
 
 CMD ["/bin/bash"]
