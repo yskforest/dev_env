@@ -30,7 +30,7 @@ RUN gem install \
     coderay
 
 # install PMD
-ARG PMD_VER=7.13.0
+ARG PMD_VER=7.19.0
 RUN cd /opt && \
     curl -L -o pmd.zip https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VER}/pmd-dist-${PMD_VER}-bin.zip && \
     unzip pmd.zip && rm pmd.zip && \
@@ -39,7 +39,7 @@ RUN cd /opt && \
 ENV PATH="/opt/pmd/bin:$PATH"
 
 # install cloc
-ARG CLOC_VER=2.04
+ARG CLOC_VER=2.06
 RUN cd /usr/local \
     && wget https://github.com/AlDanial/cloc/releases/download/v${CLOC_VER}/cloc-${CLOC_VER}.tar.gz \
     && tar -zxvf cloc-${CLOC_VER}.tar.gz \
@@ -47,7 +47,7 @@ RUN cd /usr/local \
     && rm -rf cloc-*
 
 # install graphviz
-ARG GRAPHVIZ_VER=12.2.1
+ARG GRAPHVIZ_VER=14.1.1
 RUN wget https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${GRAPHVIZ_VER}/graphviz-${GRAPHVIZ_VER}.tar.gz \
     && tar -zxvf graphviz-${GRAPHVIZ_VER}.tar.gz \
     && cd graphviz-${GRAPHVIZ_VER} \
@@ -58,8 +58,8 @@ RUN wget https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-re
     && rm -r graphviz-*
 
 # install doxygen
-ARG DOXYGEN_VER=1.13.2
-ARG DOXYGEN_VER_BAR=1_13_2
+ARG DOXYGEN_VER=1.15.0
+ARG DOXYGEN_VER_BAR=1_15_0
 RUN wget https://github.com/doxygen/doxygen/releases/download/Release_${DOXYGEN_VER_BAR}/doxygen-${DOXYGEN_VER}.linux.bin.tar.gz \
     && tar xf doxygen-${DOXYGEN_VER}.linux.bin.tar.gz \
     && cp doxygen-${DOXYGEN_VER}/bin/doxygen /usr/local/bin \

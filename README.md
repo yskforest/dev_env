@@ -30,3 +30,13 @@ docker compose run --rm cpu
 # save env
 pip freeze > requirements_snap.txt
 ```
+
+## uv
+```bash
+# install
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+uv init -p 3.12
+uv add -r requirements.txt
+uv pip list
+```
