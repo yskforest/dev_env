@@ -103,12 +103,28 @@ RUN gem install --no-document \
 RUN curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
 
 # User Setup
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+
+# Update ubuntu user to match host UID/GID
+ARG UID=1000
+ARG GID=1000
+RUN groupmod -g ${GID} ubuntu && \
+    usermod -u ${UID} -g ${GID} ubuntu && \
+    chown -R ubuntu:ubuntu /home/ubuntu
+
 USER ubuntu
 WORKDIR /home/ubuntu
 
 COPY requirements.txt ./requirements.txt
-RUN python3 -m pip install --upgrade pip --break-system-packages \
-    && python3 -m pip install -r requirements.txt --no-cache-dir --break-system-packages \
-    && rm -rf ~/.cache/pip
+
+# Initialize uv project and install dependencies
+# This creates .venv in /home/ubuntu/.venv
+RUN uv init --no-workspace --no-readme . && \
+    uv add -r requirements.txt --python-preference only-system
+
+# Ensure the virtual environment is used
+ENV VIRTUAL_ENV="/home/ubuntu/.venv"
+ENV PATH="/home/ubuntu/.venv/bin:$PATH"
 
 CMD ["/bin/bash"]

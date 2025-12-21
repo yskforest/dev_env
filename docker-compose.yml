@@ -3,6 +3,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        UID: "${UID:-1000}"
+        GID: "${GID:-1000}"
     volumes:
       - ${HOME}:/workspace
     working_dir: /workspace
@@ -17,6 +20,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.gpu
+      args:
+        UID: "${UID:-1000}"
+        GID: "${GID:-1000}"
     volumes:
       - ${HOME}:/workspace
     working_dir: /workspace

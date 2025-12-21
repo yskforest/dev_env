@@ -20,10 +20,20 @@ PowerShellで以下のコマンドを実行します。
 bash setup.sh
 ```
 - Docker
+
+Build the image with host UID/GID to avoid permission issues:
+
 ```bash
-docker compose build
+# Build with current user's UID/GID
+UID=$(id -u) GID=$(id -g) docker compose build cpu
+
+# Run
 docker compose run --rm cpu
 ```
+
+The Python environment inside the container is managed by `uv`.
+- Virtual environment: `/home/ubuntu/.venv`
+- Dependencies: Managed via `requirements.txt` (imported by `uv add -r` during build)
 
 ## memo
 ```bash
