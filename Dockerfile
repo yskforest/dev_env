@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1
+ARG BASE_IMAGE=ubuntu:24.04
 
 # --- Stage 1: Tools Builder ---
 FROM ubuntu:24.04 AS builder
@@ -52,7 +53,8 @@ RUN wget https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-re
     make install
 
 # --- Stage 2: Final Image ---
-FROM ubuntu:24.04
+# --- Stage 2: Final Image ---
+FROM ${BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/opt/ruby/bin:/opt/pmd/bin:/opt/graphviz/bin:$PATH"
@@ -116,7 +118,8 @@ RUN groupmod -g ${GID} ubuntu && \
 USER ubuntu
 WORKDIR /home/ubuntu
 
-COPY requirements.txt ./requirements.txt
+ARG REQ_FILE=requirements.txt
+COPY ${REQ_FILE} ./requirements.txt
 
 # Initialize uv project and install dependencies
 # This creates .venv in /home/ubuntu/.venv

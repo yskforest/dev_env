@@ -19,10 +19,12 @@ services:
   gpu:
     build:
       context: .
-      dockerfile: Dockerfile.gpu
+      dockerfile: Dockerfile
       args:
         UID: "${UID:-1000}"
         GID: "${GID:-1000}"
+        BASE_IMAGE: "nvidia/cuda:12.6.3-cudnn-devel-ubuntu24.04"
+        REQ_FILE: "requirements_gpu.txt"
     volumes:
       - ${HOME}:/workspace
     working_dir: /workspace
