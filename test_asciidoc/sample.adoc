@@ -1,0 +1,51 @@
+= Asciidoctor PDF with PlantUML & Japanese Font Test
+:doctype: book
+:icons: font
+:source-highlighter: coderay
+:toc: left
+:sectnums:
+:imagesdir: images
+
+== 日本語のセクション (Japanese Section)
+
+これは日本語のテキストが正しくPDFに変換されるかをテストするものです。
+もし豆腐（□□□）が表示されていたら、フォント設定に問題があります。
+
+This is a test to verify if Japanese text is correctly converted to PDF.
+If you see "tofu" boxes, there is an issue with font configuration.
+
+== PlantUML Diagrams
+
+=== Class Diagram (クラス図)
+
+[plantuml, target=diagram-classes, format=svg]
+....
+class "ユーザー (User)" as User {
+  +名前 : String
+  +ログイン()
+}
+
+class "管理者 (Admin)" as Admin {
+  +権限変更()
+}
+
+User <|-- Admin
+....
+
+=== Sequence Diagram (シーケンス図)
+
+[plantuml, target=diagram-sequence, format=svg]
+....
+actor ユーザー as User
+participant "サーバー (Server)" as Server
+database "データベース (DB)" as DB
+
+User -> Server : ログイン要求 (Login Request)
+activate Server
+Server -> DB : ユーザー検索 (Find User)
+activate DB
+DB --> Server : 結果返却 (Return Result)
+deactivate DB
+Server --> User : 認証成功 (Success)
+deactivate Server
+....
