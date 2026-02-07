@@ -53,7 +53,6 @@ RUN wget https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-re
     make install
 
 # --- Stage 2: Final Image ---
-# --- Stage 2: Final Image ---
 FROM ${BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -117,6 +116,9 @@ RUN groupmod -g ${GID} ubuntu && \
 
 USER ubuntu
 WORKDIR /home/ubuntu
+
+# OpenCode
+RUN curl -fsSL https://opencode.ai/install | bash
 
 ARG REQ_FILE=requirements.txt
 COPY ${REQ_FILE} ./requirements.txt
