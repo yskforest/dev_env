@@ -19,3 +19,4 @@ pygame
 open3d
 pyautogui
 pillow
+diff-cover
