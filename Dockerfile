@@ -120,7 +120,7 @@ WORKDIR /home/ubuntu
 # OpenCode
 RUN curl -fsSL https://opencode.ai/install | bash
 
-ARG REQ_FILE=requirements.txt
+ARG REQ_FILE=python/requirements.txt
 COPY ${REQ_FILE} ./requirements.txt
 
 # Initialize uv project and install dependencies

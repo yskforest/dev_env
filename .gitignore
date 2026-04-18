@@ -1,4 +1,5 @@
 /tmp
+/python/dev_env
 
 .python-version
 pyproject.toml
