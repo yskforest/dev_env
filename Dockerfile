@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1
-ARG BASE_IMAGE=ubuntu:24.04
+ARG BASE_IMAGE=ubuntu:26.04
+ARG CUDA_IMAGE=nvidia/cuda:13.4.1-cudnn-devel-ubuntu26.04
 
 # --- Stage 1: Tools Builder ---
-FROM ubuntu:24.04 AS builder
+FROM ubuntu:26.04 AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -16,38 +17,45 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 1. Ruby (Replace rbenv with standalone build)
-ARG RUBY_VER=3.4.5
+ARG RUBY_VER
 RUN git clone https://github.com/rbenv/ruby-build.git /tmp/ruby-build && \
     /tmp/ruby-build/install.sh && \
-    ruby-build ${RUBY_VER} /opt/ruby && \
+    ruby_version="${RUBY_VER:-$(ruby-build --definitions | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)}" && \
+    ruby-build "${ruby_version}" /opt/ruby && \
     rm -rf /tmp/ruby-build
 
 # 2. PMD
-ARG PMD_VER=7.19.0
+ARG PMD_VER
 WORKDIR /tools
-RUN curl -L -o pmd.zip https://github.com/pmd/pmd/releases/download/pmd_releases/${PMD_VER}/pmd-dist-${PMD_VER}-bin.zip && \
+RUN pmd_version="${PMD_VER:-$(curl -fsSL https://api.github.com/repos/pmd/pmd/releases/latest | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"].removeprefix("pmd_releases/"))')}" && \
+    curl -fL -o pmd.zip "https://github.com/pmd/pmd/releases/download/pmd_releases/${pmd_version}/pmd-dist-${pmd_version}-bin.zip" && \
     unzip pmd.zip && \
-    mv pmd-bin-${PMD_VER} pmd && \
+    mv "pmd-bin-${pmd_version}" pmd && \
     rm -rf pmd/docs pmd/etc/testresources
 
 # 3. Cloc
-ARG CLOC_VER=2.06
-RUN wget https://github.com/AlDanial/cloc/releases/download/v${CLOC_VER}/cloc-${CLOC_VER}.tar.gz && \
-    tar -zxvf cloc-${CLOC_VER}.tar.gz && \
-    mv cloc-${CLOC_VER}/cloc .
+ARG CLOC_VER
+RUN cloc_version="${CLOC_VER:-$(curl -fsSL https://api.github.com/repos/AlDanial/cloc/releases/latest | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"].removeprefix("v"))')}" && \
+    wget "https://github.com/AlDanial/cloc/archive/refs/tags/v${cloc_version}.tar.gz" -O "cloc-${cloc_version}.tar.gz" && \
+    tar -zxvf "cloc-${cloc_version}.tar.gz" && \
+    mv "cloc-${cloc_version}/Unix" ./cloc-lib && \
+    mv ./cloc-lib/cloc ./cloc && \
+    chmod +x ./cloc && \
+    rm -rf "cloc-${cloc_version}" "cloc-${cloc_version}.tar.gz"
 
-# 4. Doxygen
-ARG DOXYGEN_VER=1.15.0
-ARG DOXYGEN_VER_BAR=1_15_0
-RUN wget https://github.com/doxygen/doxygen/releases/download/Release_${DOXYGEN_VER_BAR}/doxygen-${DOXYGEN_VER}.linux.bin.tar.gz && \
-    tar xf doxygen-${DOXYGEN_VER}.linux.bin.tar.gz && \
-    mv doxygen-${DOXYGEN_VER}/bin/doxygen .
+# 4. Doxygen (Linux x86_64 binary)
+ARG DOXYGEN_VER
+RUN doxygen_version="${DOXYGEN_VER:-$(curl -fsSL https://api.github.com/repos/doxygen/doxygen/releases/latest | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"].removeprefix("Release_").replace("_", "."))')}" && \
+    wget "https://sourceforge.net/projects/doxygen/files/rel-${doxygen_version}/doxygen-${doxygen_version}.linux.bin.tar.gz/download" -O "doxygen-${doxygen_version}.linux.bin.tar.gz" && \
+    tar xf "doxygen-${doxygen_version}.linux.bin.tar.gz" && \
+    mv "doxygen-${doxygen_version}/bin/doxygen" .
 
 # 5. Graphviz (Source Build)
-ARG GRAPHVIZ_VER=14.1.1
-RUN wget https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${GRAPHVIZ_VER}/graphviz-${GRAPHVIZ_VER}.tar.gz && \
-    tar -zxvf graphviz-${GRAPHVIZ_VER}.tar.gz && \
-    cd graphviz-${GRAPHVIZ_VER} && \
+ARG GRAPHVIZ_VER
+RUN graphviz_version="${GRAPHVIZ_VER:-$(curl -fsSL 'https://gitlab.com/api/v4/projects/4207231/packages?package_name=graphviz-releases&per_page=100' | python3 -c 'import json,sys; versions={x["version"] for x in json.load(sys.stdin)}; print(sorted(versions, key=lambda s: tuple(int(p) for p in s.split(".")))[-1])')}" && \
+    wget "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${graphviz_version}/graphviz-${graphviz_version}.tar.gz" && \
+    tar -zxvf "graphviz-${graphviz_version}.tar.gz" && \
+    cd "graphviz-${graphviz_version}" && \
     ./configure --prefix=/opt/graphviz && \
     make -j$(nproc) && \
     make install
@@ -63,7 +71,9 @@ RUN apt-get update && apt-get install -y \
     curl wget git zip unzip \
     jq \
     python3-pip python-is-python3 \
+    libregexp-common-perl libparallel-forkmanager-perl \
     libgl1 libglib2.0-0 \
+    libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libfreetype6-dev pkg-config \
     openjdk-21-jre-headless \
     xalan \
     # Runtime deps for Ruby & Graphviz
@@ -81,17 +91,16 @@ COPY --from=builder /tools/cloc /usr/local/bin/cloc
 COPY --from=builder /tools/doxygen /usr/local/bin/doxygen
 COPY --from=builder /opt/graphviz /opt/graphviz
 
-# Install Node.js LTS
+# Install Node.js LTS and latest npm
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
     && apt-get install -y nodejs \
-    && npm install -g npm \
     && npm install -g \
     textlint \
     textlint-rule-preset-ja-technical-writing \
     textlint-plugin-asciidoctor \
     && npm cache clean --force
 
-# Install Ruby Gems
+# Install latest Ruby Gems (versions are not pinned)
 RUN gem install --no-document \
     asciidoctor \
     asciidoctor-pdf \

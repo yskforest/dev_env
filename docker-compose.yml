@@ -23,7 +23,7 @@ services:
       args:
         UID: "${UID:-1000}"
         GID: "${GID:-1000}"
-        BASE_IMAGE: "nvidia/cuda:12.6.3-cudnn-devel-ubuntu24.04"
+        BASE_IMAGE: "nvidia/cuda:13.4.1-cudnn-devel-ubuntu26.04"
         REQ_FILE: "python/requirements_gpu.txt"
     volumes:
       - ${HOME}:/workspace
